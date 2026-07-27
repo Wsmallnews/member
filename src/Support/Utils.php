@@ -9,7 +9,6 @@ use Wsmallnews\Member\Exceptions\MemberException;
  */
 class Utils
 {
-
     /**
      * Get configuration value.
      *
