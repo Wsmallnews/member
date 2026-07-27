@@ -8,60 +8,39 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Wsmallnews\Member\Commands\MemberCommand;
-use Wsmallnews\Member\Testing\TestsMember;
+use Wsmallnews\Member\Commands\MemberInstallCommand;
+use Wsmallnews\Member\Support\Utils;
 
 class MemberServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'member';
+    public static string $name = 'sn-member';
 
-    public static string $viewNamespace = 'member';
+    public static string $viewNamespace = 'sn-member';
 
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
-            ->hasInstallCommand(function (InstallCommand $command) {
-                $command
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub('wsmallnews/member');
-            });
-
-        $configFileName = $package->shortName();
-
-        if (file_exists($package->basePath("/../config/{$configFileName}.php"))) {
-            $package->hasConfigFile();
-        }
-
-        if (file_exists($package->basePath('/../database/migrations'))) {
-            $package->hasMigrations($this->getMigrations());
-        }
-
-        if (file_exists($package->basePath('/../resources/lang'))) {
-            $package->hasTranslations();
-        }
-
-        if (file_exists($package->basePath('/../resources/views'))) {
-            $package->hasViews(static::$viewNamespace);
-        }
+            ->hasConfigFile()
+            ->hasMigrations($this->getMigrations())
+            ->hasTranslations()
+            ->hasViews(static::$viewNamespace);
     }
 
     public function packageRegistered(): void {}
 
     public function packageBooted(): void
     {
+        // 注册模型别名
+        Relation::enforceMorphMap([
+            'sn-member' => Utils::getMemberModel(),
+        ]);
+
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
@@ -85,8 +64,11 @@ class MemberServiceProvider extends PackageServiceProvider
             }
         }
 
-        // Testing
-        Testable::mixin(new TestsMember);
+        // 注册 livewire 命名空间
+        Livewire::addNamespace(
+            namespace: 'sn-member',
+            classNamespace: 'Wsmallnews\\Member\\Livewire'
+        );
     }
 
     protected function getAssetPackageName(): ?string
@@ -112,7 +94,7 @@ class MemberServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            MemberCommand::class,
+            MemberInstallCommand::class,
         ];
     }
 
@@ -146,7 +128,7 @@ class MemberServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_member_table',
+            'create_sn_members_table',
         ];
     }
 }
