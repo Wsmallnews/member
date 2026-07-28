@@ -11,7 +11,7 @@ use Wsmallnews\Member\Models\Member;
 
 class AutoCreateMember
 {
-    public function handle(Login|Registered $event): void
+    public function handle(Login | Registered $event): void
     {
         $member = Member::findOrCreate($event->user);
 
