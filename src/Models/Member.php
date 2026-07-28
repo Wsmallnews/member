@@ -47,8 +47,9 @@ class Member extends SupportModel implements HasSnIdentifiable
 
     /**
      * 搜索字段（用于 morphFilter 关键词搜索）。
+     * dot-notation 格式表示通过关联模型搜索。
      */
-    public static array $keywordSearchFields = ['name'];
+    public static array $keywordSearchFields = ['user.name', 'user.email', 'user.mobile'];
 
     protected function name(): Attribute
     {
@@ -79,7 +80,6 @@ class Member extends SupportModel implements HasSnIdentifiable
             'user_id' => $user->id,
             'team_id' => $teamId,
         ], [
-            'name' => $user->name,
             'status' => MemberStatus::Normal,
         ]);
     }
