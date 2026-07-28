@@ -5,6 +5,7 @@ namespace Wsmallnews\Member\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User;
 use Wsmallnews\Comment\Models\Concerns\BeReplyer;
 use Wsmallnews\Comment\Models\Concerns\Commenter;
 use Wsmallnews\Member\Enums\MemberStatus;
@@ -70,13 +71,18 @@ class Member extends SupportModel implements HasSnIdentifiable
         );
     }
 
-    // public static function findOrCreateForTenant(Model $user, Model $tenant): static
-    // {
-    //     return static::firstOrCreate([
-    //         'user_id' => $user->id,
-    //         'team_id' => $tenant->id,
-    //     ]);
-    // }
+    public static function findOrCreate(User $user): static
+    {
+        $teamId = has_tenancy() ? current_tenant()?->id : null;
+
+        return static::firstOrCreate([
+            'user_id' => $user->id,
+            'team_id' => $teamId,
+        ], [
+            'name' => $user->name,
+            'status' => MemberStatus::Normal,
+        ]);
+    }
 
     public function user(): BelongsTo
     {

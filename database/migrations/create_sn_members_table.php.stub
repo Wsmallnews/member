@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('sn_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('team_id')->nullable()->constrained()->nullOnDelete();
+            $table->unsignedBigInteger('user_id')->default(0)->comment('用户ID');
+            $table->unsignedBigInteger('team_id')->nullable()->comment('团队ID');
             $table->string('name')->nullable()->comment('昵称');
             $table->json('counter')->nullable()->comment('计数器');
             $table->string('status', 20)->comment('状态');

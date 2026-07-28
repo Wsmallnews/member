@@ -8,12 +8,17 @@ use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Member\Commands\MemberInstallCommand;
+use Wsmallnews\Member\Http\Middleware\ResolveMember;
+use Wsmallnews\Member\Listeners\AutoCreateMember;
 use Wsmallnews\Member\Support\Utils;
 
 class MemberServiceProvider extends PackageServiceProvider
@@ -63,6 +68,15 @@ class MemberServiceProvider extends PackageServiceProvider
                 ], 'member-stubs');
             }
         }
+
+        // 登录/注册时自动创建 Member
+        Event::listen(Login::class, AutoCreateMember::class);
+        Event::listen(Registered::class, AutoCreateMember::class);
+
+        // 注册 Livewire 持久化中间件
+        Livewire::addPersistentMiddleware([
+            ResolveMember::class,
+        ]);
 
         // 注册 livewire 命名空间
         Livewire::addNamespace(

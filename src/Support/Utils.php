@@ -49,7 +49,7 @@ class Utils
         $model = self::getConfig('models')[$name] ?? null;
 
         if (blank($model) && $shouldException) {
-            throw new MemberException("模型 {$name} 不存在");
+            throw new MemberException("Model {$name} not found.");
         }
 
         return $model;
