@@ -2,11 +2,15 @@
 
 namespace Wsmallnews\Member\Enums;
 
+use BackedEnum;
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Support\Htmlable;
 use Wsmallnews\Support\Enums\Traits\EnumHelper;
 
-enum MemberStatus: string implements HasColor, HasLabel
+enum MemberStatus: string implements HasColor, HasIcon, HasLabel
 {
     use EnumHelper;
 
@@ -14,7 +18,7 @@ enum MemberStatus: string implements HasColor, HasLabel
 
     case Disabled = 'disabled';
 
-    public function getLabel(): ?string
+    public function getLabel(): string | Htmlable | null
     {
         return match ($this) {
             self::Normal => __('sn-member::member.status.normal'),
@@ -26,7 +30,15 @@ enum MemberStatus: string implements HasColor, HasLabel
     {
         return match ($this) {
             self::Normal => 'success',
-            self::Disabled => 'gray',
+            self::Disabled => 'danger',
+        };
+    }
+
+    public function getIcon(): string | BackedEnum | Htmlable | null
+    {
+        return match ($this) {
+            self::Normal => Heroicon::OutlinedCheckCircle,
+            self::Disabled => Heroicon::OutlinedNoSymbol,
         };
     }
 }

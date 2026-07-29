@@ -28,7 +28,7 @@ class ResolveMember
                 Auth::guard($guard)->logout();
 
                 Notification::make()
-                    ->title('您的账号已被禁用')
+                    ->title(__('sn-member::member.notification.account_disabled'))
                     ->danger()->send();
             }
         }

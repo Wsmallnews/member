@@ -1,5 +1,6 @@
 <?php
 
+use Wsmallnews\Member\Filament\Resources\Members\MemberResource;
 use Wsmallnews\Member\Models;
 
 return [
@@ -30,9 +31,10 @@ return [
      */
     'panel_register' => [
         'global_default' => [
-            'navigation_group' => '',
+            'navigation_group' => 'sn-member::member.global_default.navigation_group',
         ],
         'resources' => [
+            MemberResource::class,
         ],
         'pages' => [
         ],
