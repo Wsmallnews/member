@@ -6,7 +6,6 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 use Wsmallnews\Member\Filament\Resources\Members\Tables\MemberTable;
 use Wsmallnews\Member\Support\Utils;
