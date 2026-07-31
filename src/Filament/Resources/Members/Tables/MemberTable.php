@@ -5,7 +5,6 @@ namespace Wsmallnews\Member\Filament\Resources\Members\Tables;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Support\Enums\Width;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
