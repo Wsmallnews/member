@@ -127,8 +127,8 @@ class MemberTable
             }
         )
             ->label(__('sn-member::member.member_resource.action.bulk_enable'))
-            ->icon(Heroicon::OutlinedCheckCircle)
-            ->color('success')
+            ->icon(MemberStatus::Normal->getIcon())
+            ->color(MemberStatus::Normal->getColor())
             ->modalHeading(__('sn-member::member.member_resource.action.bulk_enable'))
             ->modalDescription(__('sn-member::member.member_resource.action.bulk_enable_description'));
     }
@@ -148,8 +148,8 @@ class MemberTable
             }
         )
             ->label(__('sn-member::member.member_resource.action.bulk_disable'))
-            ->icon(Heroicon::OutlinedNoSymbol)
-            ->color('danger')
+            ->icon(MemberStatus::Disabled->getIcon())
+            ->color(MemberStatus::Disabled->getColor())
             ->modalHeading(__('sn-member::member.member_resource.action.bulk_disable'))
             ->modalDescription(__('sn-member::member.member_resource.action.bulk_disable_description'));
     }
