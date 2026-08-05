@@ -16,6 +16,7 @@ use Wsmallnews\Preference\Models\Concerns\Preferencer\Viewer;
 use Wsmallnews\Support\Casts\CounterCast;
 use Wsmallnews\Support\Concerns\UserIdentifiable;
 use Wsmallnews\Support\Contracts\HasSnIdentifiable;
+use Wsmallnews\Support\Models\Concerns\HasActivityLog;
 use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 use Wsmallnews\User\Support\Utils as UserUtils;
@@ -25,6 +26,7 @@ class Member extends SupportModel implements HasSnIdentifiable
     use BeReplyer;
     use Commenter;
     use Follower;
+    use HasActivityLog;
     use Liker;
     use Preferencer;
     use SoftDeletes;

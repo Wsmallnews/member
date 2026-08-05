@@ -47,5 +47,8 @@ return [
             'enable_success' => 'Member enabled',
             'disable_success' => 'Member disabled',
         ],
+        'form' => [
+            'user_sync_tip' => 'Changes to the following user information will be synced to the associated user account.',
+        ],
     ],
 ];

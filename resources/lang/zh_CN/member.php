@@ -47,5 +47,8 @@ return [
             'enable_success' => '会员已启用',
             'disable_success' => '会员已禁用',
         ],
+        'form' => [
+            'user_sync_tip' => '以下用户信息的修改将同步到关联的用户账户。',
+        ],
     ],
 ];

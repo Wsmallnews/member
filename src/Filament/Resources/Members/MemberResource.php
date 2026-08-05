@@ -2,6 +2,7 @@
 
 namespace Wsmallnews\Member\Filament\Resources\Members;
 
+use Wsmallnews\Member\Filament\Resources\Members\Pages\EditMember;
 use Wsmallnews\Member\Filament\Resources\Members\Pages\ListMembers;
 use Wsmallnews\Member\MemberPlugin;
 use Wsmallnews\Support\Filament\Concerns\CanBeConfigured;
@@ -17,6 +18,7 @@ final class MemberResource extends BaseResource
     {
         return [
             'index' => ListMembers::route('/'),
+            'edit' => EditMember::route('/{record}'),
         ];
     }
 

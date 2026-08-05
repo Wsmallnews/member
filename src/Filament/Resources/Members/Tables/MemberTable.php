@@ -4,6 +4,7 @@ namespace Wsmallnews\Member\Filament\Resources\Members\Tables;
 
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
+use Filament\Actions\EditAction;
 use Filament\Support\Enums\Width;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Wsmallnews\Member\Enums\MemberStatus;
 use Wsmallnews\Member\Models\Member;
 use Wsmallnews\Support\Filament\Actions\ActionComponents;
+use Wsmallnews\Support\Filament\Resources\ActivityLogs\Concerns\CauserTimelineAction;
 use Wsmallnews\Support\Filament\Tables\ColumnComponents;
 use Wsmallnews\User\Support\Utils as UserUtils;
 
@@ -35,6 +37,8 @@ class MemberTable
             ])
             ->recordActions([
                 ...ActionComponents::recordActions([
+                    EditAction::make(),
+                    CauserTimelineAction::make()->color('info'),
                     static::toggleStatusAction(),
                 ]),
             ])
