@@ -2,15 +2,14 @@
 
 namespace Wsmallnews\Member\Filament\Resources\Members\Pages;
 
-use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Wsmallnews\Member\Filament\Resources\Members\MemberResource;
+use Wsmallnews\Member\Models\Member;
 
 class EditMember extends EditRecord
 {
     protected static string $resource = MemberResource::class;
-
 
     /**
      * 从关联的 User 模型填充字段到表单。
@@ -20,7 +19,7 @@ class EditMember extends EditRecord
      */
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        /** @var \Wsmallnews\Member\Models\Member $record */
+        /** @var Member $record */
         $record = $this->getRecord();
 
         $data['username'] = $record->user?->username;
@@ -42,7 +41,7 @@ class EditMember extends EditRecord
      */
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        /** @var \Wsmallnews\Member\Models\Member $record */
+        /** @var Member $record */
         $record = $this->getRecord();
 
         // 提取可编辑的 User 字段并同步到关联的 User
