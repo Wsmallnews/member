@@ -68,8 +68,8 @@ class MemberForm
                     ->default(MemberStatus::Normal)
                     ->required()->grouped(),
             ])
-            ->columns(2)
-            ->columnSpanFull(),
+                ->columns(2)
+                ->columnSpanFull(),
         ];
     }
 }
