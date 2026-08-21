@@ -29,7 +29,7 @@ class MemberForm
                     ->warning()
                     ->columnSpanFull(),
 
-                FormComponents::localImageUpload('avatar_url')
+                FormComponents::plainImageUpload('avatar_url')
                     ->label(__('sn-user::user.settings.profile.avatar'))
                     ->avatar()
                     ->columnSpanFull(),
