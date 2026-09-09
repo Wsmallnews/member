@@ -62,11 +62,7 @@ class MemberForm
                     ->label(__('sn-user::user.settings.profile.birthday'))
                     ->format('Y-m-d')
                     ->displayFormat('Y-m-d'),
-                Forms\Components\ToggleButtons::make('status')
-                    ->label(__('sn-member::member.member_resource.table.status'))
-                    ->options(MemberStatus::class)
-                    ->default(MemberStatus::Normal)
-                    ->required()->grouped(),
+                FormComponents::statusToggleButtons(MemberStatus::class),
             ])
                 ->columns(2)
                 ->columnSpanFull(),

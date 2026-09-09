@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Wsmallnews\Member\Enums\MemberStatus;
 use Wsmallnews\Member\Models\Member;
 use Wsmallnews\Support\Filament\Actions\ActionComponents;
+use Wsmallnews\Support\Filament\Filters\FilterComponents;
 use Wsmallnews\Support\Filament\Resources\ActivityLogs\Concerns\CauserTimelineAction;
 use Wsmallnews\Support\Filament\Tables\ColumnComponents;
 use Wsmallnews\User\Support\Utils as UserUtils;
@@ -34,6 +35,7 @@ class MemberTable
             ->filtersFormWidth(Width::Medium)
             ->filters([
                 static::statusFilter(),
+                ...FilterComponents::createUpdateRangeFilter(),
             ])
             ->recordActions([
                 ...ActionComponents::recordActions([
