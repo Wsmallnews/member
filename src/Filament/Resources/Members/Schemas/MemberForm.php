@@ -53,16 +53,15 @@ class MemberForm
                     ->label(__('sn-user::user.user_resource.table.name'))
                     ->required()
                     ->maxLength(10),
-                Forms\Components\ToggleButtons::make('gender')
+                FormComponents::enumsToggleButtons(Gender::class, 'gender')
                     ->label(__('sn-user::user.settings.profile.gender'))
-                    ->options(Gender::class)
                     ->default(Gender::Undisclosed)
-                    ->required()->grouped(),
+                    ->required(),
                 Forms\Components\DatePicker::make('birthday')
                     ->label(__('sn-user::user.settings.profile.birthday'))
                     ->format('Y-m-d')
                     ->displayFormat('Y-m-d'),
-                FormComponents::statusToggleButtons(MemberStatus::class),
+                FormComponents::enumsToggleButtons(MemberStatus::class),
             ])
                 ->columns(2)
                 ->columnSpanFull(),
