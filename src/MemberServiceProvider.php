@@ -16,6 +16,8 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Member\Commands\MemberInstallCommand;
 use Wsmallnews\Member\Http\Middleware\ResolveMember;
 use Wsmallnews\Member\Support\Utils;
+use Wsmallnews\Support\Features\Modules\Module;
+use Wsmallnews\Support\Features\Modules\ModuleRegistry;
 
 class MemberServiceProvider extends PackageServiceProvider
 {
@@ -33,7 +35,15 @@ class MemberServiceProvider extends PackageServiceProvider
             ->hasViews(static::$viewNamespace);
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void
+    {
+        // 模块身份登记（ModuleRegistry 单一事实源：类反查/存在性校验/插件实例）
+        ModuleRegistry::register(new Module(
+            id: static::$name,
+            namespace: 'Wsmallnews\\Member',
+            plugin: MemberPlugin::class,
+        ));
+    }
 
     public function packageBooted(): void
     {
