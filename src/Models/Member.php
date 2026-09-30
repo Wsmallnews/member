@@ -9,8 +9,6 @@ use Illuminate\Foundation\Auth\User;
 use Wsmallnews\Comment\Models\Concerns\BeReplyer;
 use Wsmallnews\Comment\Models\Concerns\Commenter;
 use Wsmallnews\Member\Enums\MemberStatus;
-use Wsmallnews\Pay\Contracts\PayerInterface;
-use Wsmallnews\Pay\Traits\UserPayerable;
 use Wsmallnews\Preference\Models\Concerns\Preferencer;
 use Wsmallnews\Preference\Models\Concerns\Preferencer\Follower;
 use Wsmallnews\Preference\Models\Concerns\Preferencer\Liker;
@@ -24,7 +22,7 @@ use Wsmallnews\Support\Models\SupportModel;
 use Wsmallnews\Support\Support\Utils as SupportUtils;
 use Wsmallnews\User\Support\Utils as UserUtils;
 
-class Member extends SupportModel implements HasSnIdentifiable, PayerInterface
+class Member extends SupportModel implements HasSnIdentifiable
 {
     use Addressable;
     use BeReplyer;
@@ -35,7 +33,6 @@ class Member extends SupportModel implements HasSnIdentifiable, PayerInterface
     use Preferencer;
     use SoftDeletes;
     use UserIdentifiable;
-    use UserPayerable;
     use Viewer;
 
     protected $table = 'sn_members';
