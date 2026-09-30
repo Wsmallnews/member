@@ -15,6 +15,7 @@ use Wsmallnews\Preference\Models\Concerns\Preferencer;
 use Wsmallnews\Preference\Models\Concerns\Preferencer\Follower;
 use Wsmallnews\Preference\Models\Concerns\Preferencer\Liker;
 use Wsmallnews\Preference\Models\Concerns\Preferencer\Viewer;
+use Wsmallnews\Profile\Models\Concerns\Addressable;
 use Wsmallnews\Support\Casts\CounterCast;
 use Wsmallnews\Support\Concerns\UserIdentifiable;
 use Wsmallnews\Support\Contracts\HasSnIdentifiable;
@@ -25,6 +26,7 @@ use Wsmallnews\User\Support\Utils as UserUtils;
 
 class Member extends SupportModel implements HasSnIdentifiable, PayerInterface
 {
+    use Addressable;
     use BeReplyer;
     use Commenter;
     use Follower;
