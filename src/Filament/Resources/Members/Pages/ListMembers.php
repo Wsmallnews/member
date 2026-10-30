@@ -4,9 +4,9 @@ namespace Wsmallnews\Member\Filament\Resources\Members\Pages;
 
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Database\Eloquent\Builder;
 use Wsmallnews\Member\Enums\MemberStatus;
 use Wsmallnews\Member\Filament\Resources\Members\MemberResource;
-use Wsmallnews\Member\Support\Utils;
 
 class ListMembers extends ListRecords
 {
@@ -19,24 +19,25 @@ class ListMembers extends ListRecords
 
     public function getTabs(): array
     {
-        return [
+        $tabs = [
             'all' => Tab::make()
                 ->label(__('sn-member::member.member_resource.tabs.all'))
-                ->badge(fn () => $this->getCount()),
-            'normal' => Tab::make()
-                ->label(MemberStatus::Normal->getLabel())
-                ->badge(fn () => $this->getCount(MemberStatus::Normal))
-                ->modifyQueryUsing(fn ($query) => $query->where('status', MemberStatus::Normal)),
-            'disabled' => Tab::make()
-                ->label(MemberStatus::Disabled->getLabel())
-                ->badge(fn () => $this->getCount(MemberStatus::Disabled))
-                ->modifyQueryUsing(fn ($query) => $query->where('status', MemberStatus::Disabled)),
+                ->badge(fn (): int => $this->getCount()),
         ];
+
+        foreach (MemberStatus::cases() as $status) {
+            $tabs[$status->value] = Tab::make()
+                ->label($status->getLabel())
+                ->badge(fn (): int => $this->getCount($status))
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->where('status', $status));
+        }
+
+        return $tabs;
     }
 
     protected function getCount(?MemberStatus $status = null): int
     {
-        $query = Utils::getMemberModel()::query()->scopeTenant();
+        $query = static::getResource()::getEloquentQuery();
 
         if ($status) {
             $query->where('status', $status);
