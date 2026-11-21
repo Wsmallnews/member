@@ -78,7 +78,7 @@ class Member extends SupportModel implements HasSnIdentifiable
 
     public static function findOrCreate(User $user): static
     {
-        $teamId = has_tenancy() ? current_tenant()?->id : null;
+        $teamId = current_tenant()?->getKey();
 
         return static::firstOrCreate([
             'user_id' => $user->id,
