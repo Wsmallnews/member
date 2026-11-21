@@ -10,14 +10,18 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Wsmallnews\Member\Commands\MemberInstallCommand;
-use Wsmallnews\Member\Http\Middleware\ResolveMember;
+use Wsmallnews\Member\Http\Middleware\EnsureMemberIsActive;
+use Wsmallnews\Member\Models\Member;
 use Wsmallnews\Member\Support\Utils;
 use Wsmallnews\Support\Features\Modules\Module;
 use Wsmallnews\Support\Features\Modules\ModuleRegistry;
+use Wsmallnews\Support\Features\Site\Site;
+use Wsmallnews\Support\Features\Site\SiteContext;
 
 class MemberServiceProvider extends PackageServiceProvider
 {
@@ -41,7 +45,7 @@ class MemberServiceProvider extends PackageServiceProvider
         ModuleRegistry::register(new Module(
             id: static::$name,
             namespace: 'Wsmallnews\\Member',
-            plugin: MemberPlugin::class,
+            plugin: null,
         ));
     }
 
@@ -75,9 +79,18 @@ class MemberServiceProvider extends PackageServiceProvider
             }
         }
 
+        // 站点的 auth.user_type = member 时，SiteContext 用它把 guard 用户投影成 Member
+        SiteContext::registerAuthUser('member', function (Site $site, string $guard) {
+            $user = Auth::guard($guard)->user();
+
+            return $user === null ? null : Member::findOrCreate($user);
+        });
+
+        $this->app['router']->aliasMiddleware('sn-ensure-member-active', EnsureMemberIsActive::class);
+
         // 注册 Livewire 持久化中间件
         Livewire::addPersistentMiddleware([
-            ResolveMember::class,
+            EnsureMemberIsActive::class,
         ]);
 
         // 注册 livewire 命名空间

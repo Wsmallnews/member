@@ -6,7 +6,7 @@
 
 - **Member 模型**：继承 `SupportModel`，实现 `HasSnIdentifiable` 接口，通过 `user_id` 关联 User 模型
 - **MemberResource**：Filament 资源，使用 `CanBeConfigured` 支持插件配置覆盖
-- **ResolveMember 中间件**：自动从登录用户解析/创建 Member 记录，设置 request attributes
+- **EnsureMemberIsActive 中间件**：会员状态校验，禁用时自动登出用户；身份解析由 `SiteContext` 完成
 
 ### Member 模型
 
@@ -67,18 +67,18 @@ $panel->resources([MemberResource::class]);
 
 ### 中间件
 
-`Wsmallnews\Member\Http\Middleware\ResolveMember` 已注册为 Livewire 持久中间件：
+`Wsmallnews\Member\Http\Middleware\EnsureMemberIsActive`（别名 `sn-ensure-member-active`）已注册为 Livewire 持久中间件：
 
-- 从登录用户自动解析/创建 Member 记录
-- 检查 Member 状态，禁用时自动登出用户
-- 设置 `request()->attributes`：`has_sn_member`、`current_sn_member`
+- 只做状态校验：Member 被禁用时自动登出用户
+- 身份解析在 `SiteContext` 内完成：站点 `auth.user_type = member` 时，member 包通过 `SiteContext::registerAuthUser('member', ...)` 把 guard 用户投影成 Member（`Member::findOrCreate`），结果按请求缓存
+- 面板 / console 没有站点，中间件直接跳过（组件通过 props 接收用户）
 
 ### 辅助函数
 
 | 函数 | 说明 |
 |---|---|
-| `has_member()` | 前端是否有当前会员（从 request attributes 读取） |
-| `current_member()` | 前端当前会员 Model |
+| `has_member()` | 前端是否有当前会员（`current_member() !== null`；站点认证普通用户时为 false） |
+| `current_member()` | 前端当前会员 Model（读 `SiteContext::getAuthUser()`） |
 
 ### 配置
 
@@ -120,11 +120,10 @@ return [
 | Member 模型 | `Wsmallnews\Member\Models\Member` |
 | MemberResource | `Wsmallnews\Member\Filament\Resources\Members\MemberResource` |
 | BaseResource | `Wsmallnews\Member\Filament\Resources\Members\BaseResource` |
-| MemberPlugin | `Wsmallnews\Member\MemberPlugin` |
 | MemberStatus | `Wsmallnews\Member\Enums\MemberStatus` |
 | Utils | `Wsmallnews\Member\Support\Utils` |
 | Facade | `Wsmallnews\Member\Facades\Member` |
-| ResolveMember 中间件 | `Wsmallnews\Member\Http\Middleware\ResolveMember` |
+| EnsureMemberIsActive 中间件 | `Wsmallnews\Member\Http\Middleware\EnsureMemberIsActive` |
 | ServiceProvider | `Wsmallnews\Member\MemberServiceProvider` |
 
 ### 常见错误
@@ -134,4 +133,4 @@ return [
 - **counter 字段使用 JSON 格式**，模型中需配合 support 包的 `CounterCast` 使用：`'counter' => CounterCast::class`。
 - **`Utils` 所有方法都是静态的**，使用 `Utils::getConfig()` 而非 `(new Utils)->getConfig()`。
 - **`Utils::getModel()` 默认会抛异常**，传递 `false` 作为第二个参数以允许返回 `null`。
-- **Member 状态被禁用时**，ResolveMember 中间件会自动登出用户，无需手动处理。
+- **Member 状态被禁用时**，EnsureMemberIsActive 中间件会自动登出用户，无需手动处理。
